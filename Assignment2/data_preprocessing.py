@@ -26,16 +26,16 @@ def convert_type(df):
 
 
 def create_composite_features(df):
-    df['date_time']= pd.to_datetime(df['date_time'])
+    #df['date_time']= pd.to_datetime(df['date_time'])
     #data.date_time.map(lambda x: x.month)
 
-    df['season'] = df.date_time.apply(lambda dt: (dt.month%12 + 3)//3)
+    #df['season'] = df.date_time.apply(lambda dt: (dt.month%12 + 3)//3)
 
 
     # Rank within the same srch id
     #
-    df['price_rank'] = df.groupby(['srch_id'])['price_usd'].rank(method='dense').astype(int)
-    df['star_rank'] = df.groupby(['srch_id'])['price_usd'].rank(method='dense').astype(int)
+    df['price_rank'] = df.groupby(['srch_id'])['price_usd'].rank(method='dense')
+    df['star_rank'] = df.groupby(['srch_id'])['price_usd'].rank(method='dense')
 
     df['value_for_money']=df.price_usd/df.prop_review_score
     df['value_for_money'] = df.prop_review_score/df.price_usd
