@@ -19,3 +19,4 @@ feats	n_estim	samples	n_train	n_test	learn_r	down_r	ndcg	balance_dataset
 31	50	42.00	3.77	4.19	0.03	3.00	0.37564	True
 51	50	42.00	3.79	4.14	0.03	3.00	0.34089	True
 51	100	42.00	3.79	4.18	0.03	3.00	0.39428	True
+51	10	10.00	0.88	0.98	0.05	3.00	0.28517	True
