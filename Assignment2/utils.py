@@ -17,6 +17,8 @@ def write_submission(recommendations, submission_file):
     writer.writerow(("SearchId", "PropertyId", "Relevance"))
     writer.writerows(rows)
 
+
+
 def balance_dataset(train, downsampling_rate):
     
     # Separate majority and minority classes
@@ -43,3 +45,169 @@ def balance_dataset(train, downsampling_rate):
     train = train.sort_values('srch_id')
     return train
 
+
+
+def define_features():
+    """
+    removes features that should not be used for training
+    eg. duplicates/raw features/position
+
+
+    :return: selected features: list with features to choose
+    """
+
+    selected_features = ['visitor_hist_adr_usd',
+     'star_diff_from_historic_mean',
+     'comp1_rate_percent_diff_log',
+     'srch_query_affinity_score',
+     'srch_room_count',
+     'visitor_hist_starrating',
+     'price_diff_from_historic_mean',
+     'comp1_rate_percent_diff_signed',
+     'comp7_rate_percent_diff_signed',
+     'srch_adults_count',
+     'prop_brand_bool',
+     'prop_country_id',
+     'visitor_location_country_id',
+     'comp6_rate_percent_diff_signed',
+     'prop_starrating',
+     'prop_review_score',
+     'srch_saturday_night_bool',
+     'random_bool',
+     'site_id',
+     'srch_length_of_stay',
+     'prop_starrating_monot',
+     'srch_id',
+     'orig_destination_distance',
+     'promotion_flag',
+     'price_rank',
+     'star_rank',
+     'srch_destination_id',
+     'srch_children_count',
+     'prop_location_score2_norm',
+     'prop_location_score1_norm',
+     'price_usd_norm_srch_id',
+     'prop_location_score2',
+     'prop_id',
+     'prop_location_score_mean',
+     'srch_booking_window',
+     'value_for_money_norm_srch_id',
+     'comp5_inv',
+     'value_for_money',
+     'comp_rate_percent_diff_mean',
+     'prop_log_historical_price',
+     'price_usd',
+     'prop_location_score1',
+     'comp2_inv',
+     'comp2_rate_percent_diff_signed',
+     'comp1_inv',
+     'comp3_inv',
+     'comp8_inv',
+     'log_price_usd',
+     'comp4_inv',
+     'comp3_rate_percent_diff_signed',
+     'comp7_inv',
+     'price_usd_norm_prop_id',
+     'comp4_rate_percent_diff_signed',
+     'comp5_rate_percent_diff_signed',
+     'comp6_inv']
+
+
+    selected_features = ['random_bool',
+     'value_for_money_star_norm_srch_id',
+     'visitor_hist_adr_usd',
+     'value_for_money_norm_srch_id',
+     'price_usd_norm_srch_id',
+     'srch_query_affinity_score',
+     'prop_location_score2_norm_srch_id',
+     'comp1_rate_percent_diff_log',
+     'prop_location_score_mean',
+     'prop_id',
+     'prop_location_score1_norm_srch_id',
+     'srch_room_count',
+     'prop_review_score_norm_srch_id',
+     'price_diff_from_historic_mean',
+     'visitor_hist_starrating',
+     'comp7_rate_percent_diff_signed',
+     'comp6_rate_percent_diff_signed',
+     'comp1_rate_percent_diff_signed',
+     'srch_adults_count',
+     'prop_location_score2_norm',
+     'price_rank',
+     'star_rank',
+     'prop_location_score2',
+     'prop_review_score_norm_srch_destination_id',
+     'prop_log_historical_price_norm_srch_id',
+     'prop_brand_bool',
+     'prop_starrating_norm_srch_destination_id',
+     'prop_country_id',
+     'visitor_location_country_id',
+     'value_for_money_star_norm_srch_destination_id',
+     'prop_starrating',
+     'prop_review_score',
+     'srch_children_count_norm_srch_id',
+     'srch_length_of_stay',
+     'price_usd_norm_prop_id',
+     'site_id',
+     'value_for_money_norm_srch_destination_id',
+     'srch_saturday_night_bool',
+     'price_usd_norm_srch_destination_id',
+     'prop_starrating_monot',
+     'value_for_money_star',
+     'srch_destination_id',
+     'value_for_money',
+     'srch_query_affinity_score_norm_srch_id',
+     'log_price_usd',
+     'month',
+     'price_usd_norm_srch_saturday_night_bool',
+     'srch_booking_window',
+     'price_usd',
+     'promotion_flag',
+     'srch_adults_count_norm_srch_id',
+     'orig_destination_distance',
+     'prop_location_score1',
+     'srch_children_count',
+     'prop_log_historical_price',
+     'star_diff_from_historic_mean',
+     'prop_location_score1_norm',
+     'comp5_rate_percent_diff_signed',
+     'comp2_inv',
+     'comp6_inv',
+     'comp_rate_percent_diff_mean',
+     'comp7_inv',
+     'comp3_rate_percent_diff_signed',
+     'comp8_rate_percent_diff_signed',
+     'comp5_inv']
+
+
+    TO_DROP=[
+     'comp1_rate','comp2_rate','comp3_rate','comp4_rate','comp5_rate',
+     'comp6_rate','comp7_rate','comp8_rate',
+     'comp6_rate_percent_diff',
+     'comp4_rate_percent_diff',
+     'comp7_rate_percent_diff',
+     'comp1_rate_percent_diff',
+     'comp3_rate_percent_diff',
+     'comp2_rate_percent_diff',
+     'comp8_rate_percent_diff',
+     'comp5_rate_percent_diff',
+     'comp1_rate_percent_diff_signed_norm',
+     'comp2_rate_percent_diff_signed_norm',
+     'comp4_rate_percent_diff_signed_norm',
+     'comp8_rate_percent_diff_signed_norm',
+     'comp3_rate_percent_diff_signed_norm',
+     'comp5_rate_percent_diff_signed_norm',
+     'comp6_rate_percent_diff_signed_norm',
+     'comp7_rate_percent_diff_signed_norm',
+     'prop_location_score1',
+     'prop_location_score2',
+     'prop_id',
+     'position']
+
+    selected_features = list(set(selected_features))
+    TO_DROP = list(set(TO_DROP))
+
+    for feat in list(TO_DROP):
+        if feat in selected_features:
+            selected_features.remove(feat)
+    return selected_features
