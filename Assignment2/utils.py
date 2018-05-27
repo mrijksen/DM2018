@@ -56,62 +56,7 @@ def define_features():
     :return: selected features: list with features to choose
     """
 
-    selected_features = ['visitor_hist_adr_usd',
-     'star_diff_from_historic_mean',
-     'comp1_rate_percent_diff_log',
-     'srch_query_affinity_score',
-     'srch_room_count',
-     'visitor_hist_starrating',
-     'price_diff_from_historic_mean',
-     'comp1_rate_percent_diff_signed',
-     'comp7_rate_percent_diff_signed',
-     'srch_adults_count',
-     'prop_brand_bool',
-     'prop_country_id',
-     'visitor_location_country_id',
-     'comp6_rate_percent_diff_signed',
-     'prop_starrating',
-     'prop_review_score',
-     'srch_saturday_night_bool',
-     'random_bool',
-     'site_id',
-     'srch_length_of_stay',
-     'prop_starrating_monot',
-     'srch_id',
-     'orig_destination_distance',
-     'promotion_flag',
-     'price_rank',
-     'star_rank',
-     'srch_destination_id',
-     'srch_children_count',
-     'prop_location_score2_norm',
-     'prop_location_score1_norm',
-     'price_usd_norm_srch_id',
-     'prop_location_score2',
-     'prop_id',
-     'prop_location_score_mean',
-     'srch_booking_window',
-     'value_for_money_norm_srch_id',
-     'comp5_inv',
-     'value_for_money',
-     'comp_rate_percent_diff_mean',
-     'prop_log_historical_price',
-     'price_usd',
-     'prop_location_score1',
-     'comp2_inv',
-     'comp2_rate_percent_diff_signed',
-     'comp1_inv',
-     'comp3_inv',
-     'comp8_inv',
-     'log_price_usd',
-     'comp4_inv',
-     'comp3_rate_percent_diff_signed',
-     'comp7_inv',
-     'price_usd_norm_prop_id',
-     'comp4_rate_percent_diff_signed',
-     'comp5_rate_percent_diff_signed',
-     'comp6_inv']
-
+  
 
     selected_features = ['random_bool',
      'value_for_money_star_norm_srch_id',
@@ -122,7 +67,6 @@ def define_features():
      'prop_location_score2_norm_srch_id',
      'comp1_rate_percent_diff_log',
      'prop_location_score_mean',
-     'prop_id',
      'prop_location_score1_norm_srch_id',
      'srch_room_count',
      'prop_review_score_norm_srch_id',
@@ -157,7 +101,7 @@ def define_features():
      'srch_destination_id',
      'value_for_money',
      'srch_query_affinity_score_norm_srch_id',
-     'log_price_usd',
+     'price_usd_log',
      'month',
      'price_usd_norm_srch_saturday_night_bool',
      'srch_booking_window',
@@ -177,7 +121,8 @@ def define_features():
      'comp7_inv',
      'comp3_rate_percent_diff_signed',
      'comp8_rate_percent_diff_signed',
-     'comp5_inv']
+     'comp5_inv', 
+     'prop_id']
 
 
     TO_DROP=[
@@ -201,8 +146,9 @@ def define_features():
      'comp7_rate_percent_diff_signed_norm',
      'prop_location_score1',
      'prop_location_score2',
-     'prop_id',
-     'position']
+     'srch_id',
+     'position',
+     'log_price_usd']
 
     selected_features = list(set(selected_features))
     TO_DROP = list(set(TO_DROP))
