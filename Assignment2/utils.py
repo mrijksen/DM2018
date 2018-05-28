@@ -121,8 +121,9 @@ def define_features():
      'comp7_inv',
      'comp3_rate_percent_diff_signed',
      'comp8_rate_percent_diff_signed',
-     'comp5_inv', 
+     'comp5_inv',
      'prop_id']
+
 
 
     TO_DROP=[
@@ -148,7 +149,9 @@ def define_features():
      'prop_location_score2',
      'srch_id',
      'position',
-     'log_price_usd']
+     'log_price_usd',
+     'srch_children_count_norm_srch_id',
+     'srch_adults_count_norm_srch_id']
 
     selected_features = list(set(selected_features))
     TO_DROP = list(set(TO_DROP))

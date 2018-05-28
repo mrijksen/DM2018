@@ -29,9 +29,10 @@ output_path = "./Plots/"
 
 overall_start_time = time.time()
 
-training_data = True
+training_data = False
 select_n_rows = True
-n_select =None
+head_set=True
+n_select =None # this changes downstream if select_n_rows is True
 
 if training_data:
     data_original = pd.read_csv('./Data Mining VU data/training_set_VU_DM_2014.csv')
@@ -45,9 +46,14 @@ len(data_original)
 
 # In[89]:
 if select_n_rows:
-    n_select = 4000000
-    df = data_original.iloc[n_select:]
-    df_original = data_original.iloc[n_select:]
+    if head_set:
+    	n_select = 4000000
+    	df = data_original.iloc[:n_select]
+    	df_original = data_original.iloc[:n_select]
+    else:
+        n_select = 4000000
+        df = data_original.iloc[n_select:]
+        df_original = data_original.iloc[n_select:]
 else:
     df = data_original
     df_original = data_original
@@ -82,33 +88,17 @@ df = df.drop(['date_time'], axis=1)
 
 
 if training_data:
-    all_cols=df.columns.drop(['booking_bool', 'click_bool', 'gross_bookings_usd', 'position'])
+    all_cols=df.columns.drop(['booking_bool', 'click_bool', 'gross_bookings_usd', 'position', 'srch_id', 'prop_id', 'relevance'])
 else:
-    all_cols=df.columns
+    all_cols=df.columns.drop(['srch_id', 'prop_id'])
+
 
 df = data_preprocessing.missing_values(df, all_cols)
-
-
-# 
-
-# In[94]:
-
-if training_data:
-    all_cols=df.columns.drop(['booking_bool', 'click_bool', 'gross_bookings_usd', 'position'])
-else:
-    all_cols=df.columns
-
-# ### NEW FEATURES
-
-# In[ ]:
-
-
 
 
 # ### Outliers
 # For features with high value outliers cap to maximum
 
-# In[95]:
 
 # If testing feature engineering use balance_dataset, otherwise use the whole 
 # dataset
@@ -118,21 +108,7 @@ df = data_preprocessing.remove_outliers(df, all_cols)
 create_plots=None
 
 
-# In[96]:
 
-
-if create_plots:
-    for feature in all_cols:
-        fig, (ax1,ax2) = plt.subplots(nrows=1, ncols=2)  
-        df_before[[feature]].hist(bins=10, ax=ax2)
-        df[[feature]].hist(bins=10, ax=ax1)
-        plt.savefig(output_path + "hist_remove_outliers_%s.png"%feature, format='png')
-
-        plt.show()
-
-
-
-# In[97]:
 
 
 start = time.time()
@@ -159,39 +135,6 @@ print(time.time()-start)
 
 
 
-# ### Calculate correlation and mutual information/information gain
-
-# ### Histograms
-
-# ## Distribution of each feature for booked and not booked hotels
-# Helps find the most discriminative features
-
-# In[21]:
-
-create_plots = None
-
-
-# In[22]:
-
-if create_plots:
-    for feature in all_cols:
-        try:
-            fig, (ax1,ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12,4))  
-            df.groupby(class_to_plot)[feature].plot(kind='kde', ax=ax1, label=class_to_plot)
-
-            plt.title(feature)
-
-            df.groupby(class_to_plot)[feature].plot(kind='kde', ax=ax2)
-            plt.savefig(output_path + "densityplot_before_after_%s.png"%feature, format='png')
-            plt.show()
-        except:
-            pass
-
-
-# # Correlation with booking
-
-# In[107]:
-
 
 
 def categorical_plot(df, feature, class_to_plot):
@@ -205,117 +148,6 @@ def categorical_plot(df, feature, class_to_plot):
     
 
 
-#sns.swarmplot(x='prop_starrating', y="booking_bool", data=df)
-
-
-# In[108]:
-
-
-# New feature creation
-# TODO: move to data_preprocessing file 
-# Here to compare before and after
-if create_plots:
-
-    class_to_plot = "booking_bool"
-    categorical_plot(df,feature , class_to_plot)
-    feature = "price_usd_norm_srch_id"
-    categorical_plot(df,feature,class_to_plot )
-
-    feature = "log_price_usd"
-    df_original[feature] = df[feature]
-
-    class_to_plot = "relevance"
-    class_to_plot = "booking_bool"
-    categorical_plot(df,feature , class_to_plot)
-    feature = "price_usd_log_norm_srch_id"
-    categorical_plot(df,feature,class_to_plot )
-
-    feature = "value_for_money"
-    feature = "prop_starrating"
-    categorical_plot(df,feature,class_to_plot)
-
-
-# In[109]:
-
-if create_plots:
-    feature = "srch_booking_window"
-    class_to_plot = "relevance"
-    feature = "prop_location_score1"
-    categorical_plot(df,feature,class_to_plot)
-    feature = "prop_location_score2"
-    categorical_plot(df,feature,class_to_plot)
-    feature = "prop_location_score_mean"
-    categorical_plot(df,feature,class_to_plot)
-
-
-# In[110]:
-
-# Can we improve this one?
-if create_plots:
-    feature = "prop_brand_bool"
-    categorical_plot(df,feature,class_to_plot)
-
-
-# In[ ]:
-
-
-
-
-# In[113]:
-
-#create_plots=True
-comp_feats=['comp1_rate','comp2_rate','comp3_rate','comp4_rate','comp5_rate','comp6_rate','comp7_rate','comp8_rate']
-
-for feat in comp_feats:
-
-
-    #df[feat + "_percent_diff_signed"]=np.log10(df_original[feat+"_percent_diff"])*df_original[feat]
-    #df[feat + "_percent_diff_signed"] = np.log10(df[feat + "_percent_diff_signed"]).replace([np.inf, -np.inf], np.nan)
-    if create_plots:
-        categorical_plot(df,feat + "_percent_diff_signed",class_to_plot)
-
-    feature =  feat + "_percent_diff_signed"
-    #df[feature+"_norm"]=(df[feature] - df[feature].mean()) / (df[feature].std())
-
-    feature = feat + "_percent_diff_signed_norm"
-    if create_plots:
-        categorical_plot(df,feature,class_to_plot)
-    plt.show()
-    
-
-
-
-# In[112]:
-
-
-# Take an average of the comp1_rate_percent_diff after normalizing
-comp_feats=['comp1_rate','comp2_rate','comp3_rate','comp4_rate','comp5_rate','comp6_rate','comp7_rate','comp8_rate']
-comp_feats_signed=[]
-for feat in comp_feats:
-    comp_feats_signed.append(feat+'_percent_diff_signed')
-if create_plots:
-    df['comp_rate_percent_diff_mean'].hist()
-    plt.show()
-    categorical_plot(df,'comp_rate_percent_diff_mean',class_to_plot)
-
-
-
-# In[40]:
-
-
-if create_plots:
-    feature = "log_price_usd"
-    categorical_plot(df,feature,class_to_plot)
-    feature="price_usd_norm_srch_id"
-    categorical_plot(df,feature,class_to_plot)
-
-
-# In[114]:
-
-def compare_corr(df, feat1,feat2):
-    cor1= np.corrcoef(df[feat1], df['relevance'])[0,1]
-    cor2 = np.corrcoef(df[feat2], df['relevance'])[0,1]
-    return(cor1,cor2)
 
 
 try:
@@ -326,23 +158,17 @@ except:
 df = data_preprocessing.missing_values(df, all_cols)
 
 
-# In[117]:
-if training_data:
-    compare_corr(df, 'price_usd','price_usd_norm_srch_id')
-
-
-# In[118]:
-
 try:
     df = df.drop(['cat'], axis=1)
 except:
     pass
 
 
+
 if training_data:
-    all_cols=df.columns.drop(['booking_bool', 'click_bool', 'gross_bookings_usd', 'position'])
+    all_cols=df.columns.drop(['booking_bool', 'click_bool', 'gross_bookings_usd', 'position', 'srch_id', 'prop_id', 'relevance'])
 else:
-    all_cols=df.columns
+    all_cols=df.columns.drop(['srch_id', 'prop_id'])
 
 for feature in all_cols:
     df[feature] = df[feature].replace([np.inf, -np.inf], np.nan)
@@ -389,13 +215,17 @@ for feat in TO_DROP:
 df1 = df.iloc[:, :35]
 df2 = df.iloc[:, 35:]
 
-part = 'tail'
-if training_data:
-    df1.to_pickle('training_cleaned_dataset_part1'+str(n_select)+part)
-    df2.to_pickle('training_cleaned_dataset_part2'+str(n_select)+part)
+if head_set:
+    part = 'head'
 else:
-    df1.to_pickle('test_cleaned_dataset_part1'+str(n_select)+part)
-    df2.to_pickle('test_cleaned_dataset_part2'+str(n_select)+part)
+    part='tail'
+
+if training_data:
+    df1.to_pickle('training_cleaned_dataset_part1_fix'+str(n_select)+part)
+    df2.to_pickle('training_cleaned_dataset_part2_fix'+str(n_select)+part)
+else:
+    df1.to_pickle('test_cleaned_dataset_part1_fix'+str(n_select)+part)
+    df2.to_pickle('test_cleaned_dataset_part2_fix'+str(n_select)+part)
 
 
 overall_time = (time.time() - overall_start_time  )/60
